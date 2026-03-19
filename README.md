@@ -12,7 +12,7 @@ A fork of [TauricResearch/TradingAgents](https://github.com/TauricResearch/Tradi
 
 ## ✦ What's different in this fork
 
-The original framework includes market, news, sentiment, and fundamentals analysts feeding into a bull/bear debate and risk management team. This fork adds a custom **Silicon Valley Panel** that sits alongside those agents.
+The original framework includes market, news, fundamentals, and sentiment analysts feeding into a bull/bear debate and risk management team. This fork adds a custom **Silicon Valley Panel** that sits alongside those agents.
 
 Rather than a single perspective, 8 investor personas each evaluate the stock from their unique lens — then debate each other. The tension between opposing frameworks produces more nuanced output than any single analyst.
 
@@ -60,6 +60,50 @@ Research team
 
 → Final decision: BUY / HOLD / SELL with rationale
 ```
+
+---
+
+## 📋 Example output — Vertiv Holdings (VRT)
+
+> Full analysis run on March 19, 2026
+
+**📉 Market analyst**
+VRT up 85% in 6 months, currently $264. Golden cross confirmed (50 SMA above 200 SMA). However MACD declining from peak of 19.4 to 13.3 while price made new highs — classic negative divergence. RSI at 62, ATR elevated at $13.55. Likely entering consolidation. Support at $245–250.
+
+**📰 News analyst**
+Expanded NVIDIA collaboration on Vera Rubin DSX AI factory infrastructure. New BYOP&C partnership with Generate Capital addresses grid-constrained markets. CEO confirmed liquid cooling capacity growing "really, really rapidly." Wall Street analysts say stock "not done" despite 50% YTD gain.
+
+**📊 Fundamentals analyst**
+Revenue $2.88B in Q4 2025, up 22.7% YoY. Net income grew 202% YoY to $445M. Gross margins expanded 520bps to 38.9%. Free cash flow $884M at 30.7% margin. Net debt declining — now 0.54x EBITDA. Forward P/E 33x implies 134% earnings growth expected. Execution risk is real at these multiples.
+
+**✦ Silicon Valley panel**
+
+| Investor | Stance | Key reason |
+|---|---|---|
+| 🏦 Buffett | SELL | 78x trailing P/E unjustifiable for cyclical business |
+| 📦 Bezos | CAUTIOUS | Momentum deceleration signals Day 2 fatigue |
+| 🚀 Musk | SELL | Priced for perfection, momentum crowded |
+| 🍎 Cook | HOLD | Margin sustainability unproven at scale |
+| 🔍 Pichai | CAUTIOUS BULL | NVIDIA partnership real, platform not yet monetised |
+| 📈 Gurley | SELL | Margin compression inevitable as Modine/Schneider scale |
+| ⚡ Huang | HOLD | Right trend, wrong price — wait for $200–220 |
+| 📊 Simons | SELL | MACD divergence + volume fadeout = reversal imminent |
+
+**Consensus:** 5 of 8 bearish or cautious. Fair value range $200–$250 vs current $265.
+
+**🐂 Bull researcher**
+NVIDIA partnership and BYOP&C alliance are structural moat-builders. Liquid cooling is a 10-year secular trend. Management executing ahead of competitors on capacity.
+
+**🐻 Bear researcher**
+Valuation prices in perfection. Modine achieving 95% of Vertiv's performance creates real margin compression risk. Q4 FCF inflated by $480M working capital release unlikely to repeat.
+
+**⚖️ Risk verdict**
+
+> **FINAL TRANSACTION PROPOSAL: HOLD**
+>
+> If you own it — hold with stop at $230, consider trimming 30–40% at current levels.
+> If you don't own it — wait for pullback to $220–238 before initiating.
+> Re-evaluate on: Q1 2026 earnings, NVIDIA Rubin deployment timeline, any Modine pricing moves.
 
 ---
 
