@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradingAgents — sanaships fork</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0c0e; --surface: #141416; --surface2: #1a1a1e;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8e6df; --muted: #7a7870; --accent: #a8e6c3;
+    --accent2: #f0c87a; --accent3: #c5b8f5; --teal: #1D9E75;
+    --teal-light: #a8e6c3; --amber: #EF9F27; --purple: #7F77DD; --coral: #D85A30;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; padding: 0; max-width: 860px; margin: 0 auto; }
+  .hero { padding: 80px 48px 60px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -60px; left: -60px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(29,158,117,0.12) 0%, transparent 70%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(127,119,221,0.08) 0%, transparent 70%); pointer-events: none; }
+  .fork-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); border: 0.5px solid var(--border2); border-radius: 4px; padding: 4px 10px; margin-bottom: 24px; letter-spacing: 0.03em; }
+  .fork-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+  h1 { font-family: 'Fraunces', serif; font-size: clamp(36px, 5vw, 52px); font-weight: 600; color: var(--text); line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.02em; }
+  h1 em { font-style: italic; color: var(--teal-light); }
+  .hero-desc { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 32px; line-height: 1.6; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .badge { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 4px; border: 0.5px solid var(--border2); color: var(--muted); background: var(--surface); letter-spacing: 0.02em; }
+  .badge.green { border-color: rgba(29,158,117,0.4); color: var(--teal-light); background: rgba(29,158,117,0.08); }
+  .badge.amber { border-color: rgba(239,159,39,0.4); color: var(--accent2); background: rgba(239,159,39,0.08); }
+  .badge.purple { border-color: rgba(127,119,221,0.4); color: var(--accent3); background: rgba(127,119,221,0.08); }
+  .disclaimer { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); border: 0.5px solid rgba(216,90,48,0.3); border-radius: 4px; padding: 5px 12px; background: rgba(216,90,48,0.05); }
+  .disclaimer span { color: var(--coral); font-weight: 500; }
+  section { padding: 0 48px 56px; }
+  h2 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; color: var(--text); margin-bottom: 24px; letter-spacing: -0.01em; }
+  h2 .num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px; letter-spacing: 0.05em; }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .why-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 20px; }
+  .why-card .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 16px; }
+  .why-card .icon.teal { background: rgba(29,158,117,0.15); }
+  .why-card .icon.amber { background: rgba(239,159,39,0.15); }
+  .why-card .icon.purple { background: rgba(127,119,221,0.15); }
+  .why-card .icon.coral { background: rgba(216,90,48,0.15); }
+  .why-card h3 { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .why-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .arch-wrap { position: relative; }
+  .arch-layer { border: 0.5px solid var(--border); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+  .arch-layer.highlight { border-color: rgba(29,158,117,0.4); box-shadow: 0 0 0 1px rgba(29,158,117,0.1) inset; }
+  .arch-header { padding: 8px 16px; background: var(--surface2); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .arch-header .dot { width: 5px; height: 5px; border-radius: 50%; }
+  .arch-header .new-tag { margin-left: auto; background: rgba(29,158,117,0.15); color: var(--teal-light); border: 0.5px solid rgba(29,158,117,0.3); border-radius: 3px; padding: 1px 6px; font-size: 9px; }
+  .arch-body { padding: 12px; display: grid; gap: 8px; }
+  .arch-body.cols4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .arch-body.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .arch-body.cols2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arch-body.cols1 { grid-template-columns: 1fr; }
+  .agent-box { background: var(--surface2); border: 0.5px solid var(--border); border-radius: 7px; padding: 10px 12px; }
+  .agent-box.glow { background: rgba(29,158,117,0.06); border-color: rgba(29,158,117,0.25); }
+  .agent-box.amber-glow { background: rgba(239,159,39,0.06); border-color: rgba(239,159,39,0.2); }
+  .agent-box h4 { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .agent-box.glow h4 { color: var(--teal-light); }
+  .agent-box.amber-glow h4 { color: var(--accent2); }
+  .agent-box p { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .arch-arrow { text-align: center; color: var(--muted); font-size: 14px; padding: 2px 0; letter-spacing: 2px; }
+  .persona-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 12px; background: rgba(29,158,117,0.04); border-top: 0.5px solid rgba(29,158,117,0.15); }
+  .persona-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; padding: 8px 10px; }
+  .persona-box h5 { font-size: 11px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .persona-box p { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .debate-note { font-size: 11px; color: rgba(168,230,195,0.7); text-align: center; padding: 8px 12px; border-top: 0.5px solid rgba(29,158,117,0.15); font-family: 'DM Mono', monospace; letter-spacing: 0.02em; background: rgba(29,158,117,0.04); }
+  .output-box { background: var(--surface); border: 0.5px solid var(--border2); border-radius: 10px; padding: 20px 24px; text-align: center; margin-top: 8px; }
+  .output-box .label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .output-pill-row { display: flex; gap: 8px; justify-content: center; }
+  .output-pill { padding: 6px 18px; border-radius: 6px; font-size: 13px; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 0.03em; }
+  .pill-buy { background: rgba(29,158,117,0.15); color: var(--teal-light); border: 0.5px solid rgba(29,158,117,0.3); }
+  .pill-hold { background: rgba(239,159,39,0.12); color: var(--accent2); border: 0.5px solid rgba(239,159,39,0.25); }
+  .pill-sell { background: rgba(216,90,48,0.12); color: #f0997b; border: 0.5px solid rgba(216,90,48,0.25); }
+  .output-sub { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .install-steps { display: grid; gap: 8px; }
+  .step { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .step-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); padding-top: 1px; }
+  .step-content h4 { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .step-content p { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  pre { background: var(--bg); border: 0.5px solid var(--border); border-radius: 6px; padding: 10px 14px; font-family: 'DM Mono', monospace; font-size: 11px; color: #c5d3e0; overflow-x: auto; line-height: 1.8; }
+  .comment { color: var(--muted); } .kw { color: var(--teal-light); } .str { color: var(--accent2); }
+  footer { padding: 32px 48px; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  footer p { font-size: 12px; color: var(--muted); }
+  footer a { color: var(--teal-light); text-decoration: none; }
+  .divider { height: 0.5px; background: var(--border); margin: 0 48px 48px; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .hero > * { animation: fadeUp 0.5s ease both; }
+  .hero > *:nth-child(2) { animation-delay: 0.05s; }
+  .hero > *:nth-child(3) { animation-delay: 0.1s; }
+  .hero > *:nth-child(4) { animation-delay: 0.15s; }
+  .hero > *:nth-child(5) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="fork-badge"><span class="dot"></span> forked from TauricResearch/TradingAgents</div>
+  <h1>Trading<em>Agents</em><br>Silicon Valley fork</h1>
+  <p class="hero-desc">A multi-agent LLM framework extended with a custom analyst that simulates how 8 legendary investors debate a stock — then synthesises their conflicting views into a single recommendation.</p>
+  <div class="badge-row">
+    <span class="badge">Python 3.11+</span>
+    <span class="badge">LangGraph</span>
+    <span class="badge green">Claude / OpenAI / Ollama</span>
+    <span class="badge amber">yfinance</span>
+    <span class="badge purple">Silicon Valley panel — custom</span>
+  </div>
+  <br>
+  <div class="disclaimer"><span>⚠ Not financial advice.</span> Research and educational use only.</div>
+</div>
+
+<div class="divider"></div>
+
+<section>
+  <h2><span class="num">01 — WHY THIS FORK</span>Why it produces better analysis</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="icon teal">🧠</div>
+      <h3>8 distinct mental models, not one</h3>
+      <p>The original framework runs standard technical + fundamental analysis. This fork adds 8 legendary investor personas — each with a radically different framework for evaluating a stock.</p>
+    </div>
+    <div class="why-card">
+      <div class="icon amber">⚡</div>
+      <h3>Adversarial debate within the panel</h3>
+      <p>Buffett's moat thinking directly challenges Musk's first-principles skepticism. Jim Simons ignores both and looks at pure patterns. That tension surfaces blind spots a single analyst misses.</p>
+    </div>
+    <div class="why-card">
+      <div class="icon purple">🎯</div>
+      <h3>Nuanced, not just BUY / SELL</h3>
+      <p>Because the personas disagree, the final output includes price targets, re-evaluation triggers, and position sizing guidance — not just a binary call.</p>
+    </div>
+    <div class="why-card">
+      <div class="icon coral">🔬</div>
+      <h3>Domain expertise built into the prompt</h3>
+      <p>Jensen Huang's lens is particularly sharp on AI infrastructure stocks. Simons' quant frame works for technical divergences. The right persona is strong where others are weak.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <h2><span class="num">02 — ARCHITECTURE</span>How the agents work together</h2>
+  <div class="arch-wrap">
+    <div class="arch-layer">
+      <div class="arch-header">
+        <span class="dot" style="background:#378ADD"></span>
+        Analyst team — parallel data gathering
+      </div>
+      <div class="arch-body cols4">
+        <div class="agent-box"><h4>Market analyst</h4><p>RSI, MACD, Bollinger bands, price action</p></div>
+        <div class="agent-box"><h4>News analyst</h4><p>Headlines, macro, insider transactions</p></div>
+        <div class="agent-box"><h4>Fundamentals</h4><p>Balance sheet, cash flow, P/E, margins</p></div>
+        <div class="agent-box glow"><h4>Silicon Valley panel ✦</h4><p>8 investor personas, debate each other</p></div>
+      </div>
+    </div>
+    <div class="arch-layer highlight">
+      <div class="arch-header" style="background:rgba(29,158,117,0.06); border-color:rgba(29,158,117,0.2); color:rgba(168,230,195,0.8);">
+        <span class="dot" style="background:#1D9E75"></span>
+        Silicon Valley panel — custom extension
+        <span class="new-tag">NEW IN THIS FORK</span>
+      </div>
+      <div class="persona-grid">
+        <div class="persona-box"><h5>Warren Buffett</h5><p>Durable moat, 20-year hold test</p></div>
+        <div class="persona-box"><h5>Jeff Bezos</h5><p>Day 1 vs Day 2, compounding</p></div>
+        <div class="persona-box"><h5>Elon Musk</h5><p>First principles, physics of biz</p></div>
+        <div class="persona-box"><h5>Tim Cook</h5><p>Margins, supply chain, services</p></div>
+        <div class="persona-box"><h5>Sundar Pichai</h5><p>AI integration, platform moat</p></div>
+        <div class="persona-box"><h5>Bill Gurley</h5><p>Market size, rake, competition</p></div>
+        <div class="persona-box"><h5>Jensen Huang</h5><p>Real AI vs hype, compute demand</p></div>
+        <div class="persona-box"><h5>Jim Simons</h5><p>Pure quant — patterns only</p></div>
+      </div>
+      <div class="debate-note">personas debate each other → adversarial tension produces more nuanced output than any single analyst</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer">
+      <div class="arch-header">
+        <span class="dot" style="background:#D85A30"></span>
+        Research team — structured debate
+      </div>
+      <div class="arch-body cols2">
+        <div class="agent-box"><h4>Bull researcher</h4><p>Builds the upside case, challenges bear</p></div>
+        <div class="agent-box"><h4>Bear researcher</h4><p>Identifies risks, challenges bull thesis</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer">
+      <div class="arch-header">
+        <span class="dot" style="background:#EF9F27"></span>
+        Trader agent
+      </div>
+      <div class="arch-body cols1">
+        <div class="agent-box amber-glow"><h4>Trader</h4><p>Synthesises all analyst and researcher reports into an initial investment proposal with position sizing guidance</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer">
+      <div class="arch-header">
+        <span class="dot" style="background:#7a7870"></span>
+        Risk management — three-way review
+      </div>
+      <div class="arch-body cols3">
+        <div class="agent-box"><h4>Aggressive</h4><p>Argues for higher risk tolerance</p></div>
+        <div class="agent-box"><h4>Neutral</h4><p>Balances risk and return</p></div>
+        <div class="agent-box"><h4>Conservative</h4><p>Capital preservation focus</p></div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="output-box">
+      <div class="label">Final output</div>
+      <div class="output-pill-row">
+        <div class="output-pill pill-buy">BUY</div>
+        <div class="output-pill pill-hold">HOLD</div>
+        <div class="output-pill pill-sell">SELL</div>
+      </div>
+      <div class="output-sub">with price targets, re-evaluation triggers, and position sizing</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <h2><span class="num">03 — QUICKSTART</span>Run it in 4 steps</h2>
+  <div class="install-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h4>Clone this fork</h4>
+        <pre>git clone https://github.com/sanaships/TradingAgents
+cd TradingAgents</pre>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h4>Create a virtual environment (Python 3.11 required)</h4>
+        <pre>python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt</pre>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h4>Add your API key</h4>
+        <pre>cp .env.example .env
+# Add ANTHROPIC_API_KEY to .env
+# Get one free at console.anthropic.com</pre>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h4>Run an analysis</h4>
+        <pre>python3 run.py</pre>
+        <p>Edit run.py to change the ticker or model.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built on top of <a href="https://github.com/TauricResearch/TradingAgents">TradingAgents</a> by Tauric Research — Apache 2.0</p>
+  <p style="color:rgba(216,90,48,0.8); font-size:11px;">⚠ Not financial advice. For research use only.</p>
+</footer>
+
+</body>
+</html>
