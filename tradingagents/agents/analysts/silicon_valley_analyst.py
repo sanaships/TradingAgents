@@ -9,6 +9,13 @@ def create_silicon_valley_analyst(llm):
         current_date = state["trade_date"]
         ticker = state["company_of_interest"]
 
+        # Prevent duplicate runs — if we already have a report, skip
+        if state.get("silicon_valley_report") and len(state["silicon_valley_report"]) > 100:
+            return {
+                "messages": [],
+                "silicon_valley_report": state["silicon_valley_report"],
+            }
+
         tools = [
             get_stock_data,
             get_indicators,
