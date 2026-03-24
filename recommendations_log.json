@@ -1,0 +1,117 @@
+[
+  {
+    "ticker": "VRT",
+    "run_date": "2026-03-19",
+    "verdict": "HOLD",
+    "full_analysis": "Market: VRT up 85% in 6 months at $264. Golden cross confirmed but MACD declining 19.4 to 13.3 while price made new highs \u2014 classic negative divergence. RSI 62, support $245\u2013250. News: Expanded NVIDIA collaboration on Vera Rubin DSX. BYOP&C partnership with Generate Capital. CEO confirmed liquid cooling growing really rapidly. Fundamentals: Revenue $2.88B Q4 2025, +22.7% YoY. Net income +202% to $445M. Gross margin 38.9%. FCF $884M at 30.7% margin. Forward P/E 33x implies 134% earnings growth required. Silicon Valley panel: 5 of 8 bearish or cautious. Buffett, Musk, Gurley, Simons all SELL. Cook and Huang HOLD. Pichai BULL. Fair value consensus $200\u2013$250 vs $265.",
+    "config": {
+      "analysts": [
+        "market",
+        "fundamentals",
+        "silicon_valley"
+      ],
+      "debate_rounds": 1,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "review": {
+      "review_date": null,
+      "price_at_run": 269.17,
+      "price_at_review": null,
+      "actual_outcome": null,
+      "was_correct": null,
+      "notes": null
+    }
+  },
+  {
+    "ticker": "ANET",
+    "run_date": "2026-03-19",
+    "verdict": "HOLD",
+    "full_analysis": "",
+    "config": {
+      "analysts": [
+        "market",
+        "fundamentals",
+        "silicon_valley"
+      ],
+      "debate_rounds": 1,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "review": {
+      "review_date": null,
+      "price_at_run": 136.26,
+      "price_at_review": null,
+      "actual_outcome": null,
+      "was_correct": null,
+      "notes": null
+    }
+  },
+  {
+    "ticker": "NOC",
+    "run_date": "2026-03-19",
+    "verdict": "HOLD",
+    "full_analysis": "Not overvalued enough to justify aggressive selling. Not undervalued enough for confident buying. Quality of business justifies holding for patient capital. For traders: reduce exposure by 40% at current levels and reassess below $710. For investors: hold existing positions, avoid new entries, wait for $650 range.",
+    "config": {
+      "analysts": [
+        "market",
+        "fundamentals",
+        "silicon_valley"
+      ],
+      "debate_rounds": 1,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "review": {
+      "review_date": null,
+      "price_at_run": 714.15,
+      "price_at_review": null,
+      "actual_outcome": null,
+      "was_correct": null,
+      "notes": null
+    }
+  },
+  {
+    "ticker": "RKLB",
+    "run_date": "2026-03-19",
+    "verdict": "SELL",
+    "full_analysis": "SELL",
+    "config": {
+      "analysts": [
+        "market",
+        "fundamentals",
+        "silicon_valley"
+      ],
+      "debate_rounds": 1,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "review": {
+      "review_date": null,
+      "price_at_run": null,
+      "price_at_review": null,
+      "actual_outcome": null,
+      "was_correct": null,
+      "notes": null
+    }
+  },
+  {
+    "ticker": "FXI",
+    "run_date": "2026-03-24",
+    "verdict": "SELL",
+    "full_analysis": "SELL",
+    "config": {
+      "analysts": [
+        "market",
+        "fundamentals",
+        "silicon_valley"
+      ],
+      "debate_rounds": 1,
+      "model": "claude-haiku-4-5-20251001"
+    },
+    "review": {
+      "review_date": null,
+      "price_at_run": null,
+      "price_at_review": null,
+      "actual_outcome": null,
+      "was_correct": null,
+      "notes": null
+    }
+  }
+]
