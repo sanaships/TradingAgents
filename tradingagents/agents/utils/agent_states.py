@@ -31,7 +31,7 @@ class RiskDebateState(TypedDict):
 class AgentState(MessagesState):
     company_of_interest: Annotated[str, "Company that we are interested in trading"]
     trade_date: Annotated[str, "What date we are trading at"]
-    sender: Annotated[str, "Agent that sent this message"]
+    time_horizon: Annotated[str, "Investment time horizon: 1_month, 3_months, 12_months, or 3_years"]
     # research step
     market_report: Annotated[str, "Report from the Market Analyst"]
     sentiment_report: Annotated[str, "Report from the Social Media Analyst"]
