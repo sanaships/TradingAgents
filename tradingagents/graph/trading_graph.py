@@ -193,21 +193,39 @@ class TradingAgentsGraph:
 
         # Initialize state
         init_agent_state = self.propagator.create_initial_state(
-            company_name, time_horizon
+            company_name, trade_date, time_horizon
         )
         args = self.propagator.get_graph_args()
 
         if self.debug:
-            # Debug mode with tracing
-            trace = []
-            for chunk in self.graph.stream(init_agent_state, **args):
-                if len(chunk["messages"]) == 0:
-                    pass
-                else:
-                    chunk["messages"][-1].pretty_print()
-                    trace.append(chunk)
-
-            final_state = trace[-1]
+            # Debug mode — stream per-node updates so all agents are visible
+            # Collect final state from the values stream simultaneously
+            final_state = None
+            for chunk in self.graph.stream(
+                init_agent_state, stream_mode=["updates", "values"], config=args["config"]
+            ):
+                updates, values = chunk
+                # Print this node's outputs
+                for node_name, node_updates in updates.items():
+                    print(f"\n{'='*20} {node_name} {'='*20}")
+                    if "messages" in node_updates and node_updates["messages"]:
+                        node_updates["messages"][-1].pretty_print()
+                    if "investment_plan" in node_updates and node_updates["investment_plan"]:
+                        print(node_updates["investment_plan"])
+                    if "final_trade_decision" in node_updates and node_updates["final_trade_decision"]:
+                        print(node_updates["final_trade_decision"])
+                    if "investment_debate_state" in node_updates:
+                        resp = node_updates["investment_debate_state"].get("current_response", "")
+                        if resp:
+                            print(resp)
+                    if "risk_debate_state" in node_updates:
+                        ds = node_updates["risk_debate_state"]
+                        for key in ("current_aggressive_response", "current_conservative_response", "current_neutral_response", "judge_decision"):
+                            val = ds.get(key, "")
+                            if val:
+                                print(val)
+                                break
+                final_state = values
         else:
             # Standard mode without tracing
             final_state = self.graph.invoke(init_agent_state, **args)

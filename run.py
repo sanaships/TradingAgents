@@ -10,7 +10,7 @@ from tradingagents.default_config import DEFAULT_CONFIG
 
 config = DEFAULT_CONFIG.copy()
 config["llm_provider"] = "anthropic"
-config["deep_think_llm"] = "claude-sonnet-4-5"
+config["deep_think_llm"] = "claude-sonnet-4-6"
 config["quick_think_llm"] = "claude-haiku-4-5-20251001"
 config["max_debate_rounds"] = 1
 config["time_horizon"] = "12_months"  # options: "1_month", "3_months", "12_months", "3_years"
@@ -27,12 +27,11 @@ ta = TradingAgentsGraph(
     config=config
 )
 
-TICKER = "ASML"
+TICKER = "VST"
 RUN_DATE = date.today().strftime("%Y-%m-%d")
 TIME_HORIZON = "12_months"  # options: 1_month, 3_months, 12_months, 3_years
 full_state, decision = ta.propagate(TICKER, RUN_DATE, TIME_HORIZON)
 
-_, decision = ta.propagate(TICKER, RUN_DATE)
 print(decision)
 
 # ── Save structured recommendation log ────────────────────────
@@ -58,7 +57,7 @@ record = {
     "run_date":      RUN_DATE,
     "time_horizon":  TIME_HORIZON,
     "verdict":       verdict,
-    "full_analysis": decision,
+    "full_analysis": full_state.get("final_trade_decision", decision),
     "silicon_valley_analysis": full_state.get("silicon_valley_report", ""),
     "market_analysis":         full_state.get("market_report", ""),
     "fundamentals_analysis":   full_state.get("fundamentals_report", ""),

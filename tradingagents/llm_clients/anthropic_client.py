@@ -14,7 +14,7 @@ class AnthropicClient(BaseLLMClient):
 
     def get_llm(self) -> Any:
         """Return configured ChatAnthropic instance."""
-        llm_kwargs = {"model": self.model}
+        llm_kwargs = {"model": self.model, "max_retries": 5}
 
         for key in ("timeout", "max_retries", "api_key", "max_tokens", "callbacks", "http_client", "http_async_client"):
             if key in self.kwargs:

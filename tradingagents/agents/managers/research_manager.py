@@ -24,7 +24,11 @@ def create_research_manager(llm, memory):
             "3_years":   "Moat durability, management quality, and TAM expansion dominate. Current valuation only matters as margin of safety.",
         }.get(time_horizon, "Fundamentals and competitive position dominate.")
 
+        current_date = state.get("trade_date", "unknown")
+
         prompt = f"""You are the portfolio manager and debate facilitator making a {time_horizon} investment recommendation.
+
+TODAY'S DATE: {current_date}. All analysis below reflects data as of this date. Do not reference events, prices, or earnings from before this date as if they are upcoming — they may already be history. Base your conclusions solely on the reports provided.
 
 TIME HORIZON: {time_horizon}
 GUIDANCE: {horizon_guidance}
@@ -66,5 +70,6 @@ Debate History:
         return {
             "investment_debate_state": new_investment_debate_state,
             "investment_plan": response.content,
+            "trader_investment_plan": response.content,
         }
     return research_manager_node

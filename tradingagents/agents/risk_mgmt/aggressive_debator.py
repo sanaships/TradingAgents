@@ -8,26 +8,16 @@ def create_aggressive_debator(llm):
         aggressive_history = risk_debate_state.get("aggressive_history", "")
         current_conservative_response = risk_debate_state.get("current_conservative_response", "")
         current_neutral_response = risk_debate_state.get("current_neutral_response", "")
-        market_research_report = state["market_report"]
-        sentiment_report = state["sentiment_report"]
-        news_report = state["news_report"]
-        fundamentals_report = state["fundamentals_report"]
         trader_decision = state["trader_investment_plan"]
         company = state["company_of_interest"]
 
         prompt = f"""As the Aggressive Risk Analyst, your role is to actively champion high-reward opportunities, emphasizing bold strategies and competitive advantages. When evaluating the trader's decision or plan, focus on the potential upside, growth potential, and innovative benefits — even when these come with elevated risk.
 
-Use the provided market data and sentiment analysis to strengthen your arguments and challenge opposing views. Respond directly to each point made by the conservative and neutral analysts, countering with data-driven rebuttals and persuasive reasoning. Highlight where their caution might miss critical opportunities or where their assumptions are overly conservative.
+Respond directly to each point made by the conservative and neutral analysts, countering with data-driven rebuttals and persuasive reasoning. Highlight where their caution might miss critical opportunities or where their assumptions are overly conservative.
 
-Here is the trader's decision:
+Here is the investment plan to evaluate:
 {trader_decision}
 
-Your task is to create a compelling case by questioning and critiquing the conservative and neutral stances to demonstrate why your high-reward perspective offers the best path forward. Incorporate insights from:
-
-Market Research Report: {market_research_report}
-Social Media Sentiment Report: {sentiment_report}
-Latest World Affairs Report: {news_report}
-Company Fundamentals Report: {fundamentals_report}
 Current conversation history: {history}
 Last conservative analyst argument: {current_conservative_response}
 Last neutral analyst argument: {current_neutral_response}
