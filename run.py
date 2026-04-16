@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from dotenv import load_dotenv
 from datetime import date
@@ -27,7 +28,7 @@ ta = TradingAgentsGraph(
     config=config
 )
 
-TICKER = "ISRG"
+TICKER = "TSM"
 RUN_DATE = date.today().strftime("%Y-%m-%d")
 TIME_HORIZON = "12_months"  # options: 1_month, 3_months, 12_months, 3_years
 full_state, decision = ta.propagate(TICKER, RUN_DATE, TIME_HORIZON)
@@ -44,12 +45,15 @@ if os.path.exists(LOG_FILE):
 else:
     log = []
 
-# Parse the decision for a clean verdict
+# Parse the decision for a clean verdict — use last whole-word match to avoid
+# false positives like "not a BUY, it's a HOLD" returning BUY
 verdict = "UNKNOWN"
+last_pos = -1
 for word in ["BUY", "HOLD", "SELL"]:
-    if word in decision.upper():
-        verdict = word
-        break
+    for m in re.finditer(rf'\b{word}\b', decision.upper()):
+        if m.start() > last_pos:
+            last_pos = m.start()
+            verdict = word
 
 # Build the record
 record = {
