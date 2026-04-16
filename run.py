@@ -27,7 +27,7 @@ ta = TradingAgentsGraph(
     config=config
 )
 
-TICKER = "VST"
+TICKER = "ISRG"
 RUN_DATE = date.today().strftime("%Y-%m-%d")
 TIME_HORIZON = "12_months"  # options: 1_month, 3_months, 12_months, 3_years
 full_state, decision = ta.propagate(TICKER, RUN_DATE, TIME_HORIZON)

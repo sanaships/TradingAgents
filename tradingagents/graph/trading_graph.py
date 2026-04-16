@@ -201,31 +201,31 @@ class TradingAgentsGraph:
             # Debug mode — stream per-node updates so all agents are visible
             # Collect final state from the values stream simultaneously
             final_state = None
-            for chunk in self.graph.stream(
+            for stream_mode, data in self.graph.stream(
                 init_agent_state, stream_mode=["updates", "values"], config=args["config"]
             ):
-                updates, values = chunk
-                # Print this node's outputs
-                for node_name, node_updates in updates.items():
-                    print(f"\n{'='*20} {node_name} {'='*20}")
-                    if "messages" in node_updates and node_updates["messages"]:
-                        node_updates["messages"][-1].pretty_print()
-                    if "investment_plan" in node_updates and node_updates["investment_plan"]:
-                        print(node_updates["investment_plan"])
-                    if "final_trade_decision" in node_updates and node_updates["final_trade_decision"]:
-                        print(node_updates["final_trade_decision"])
-                    if "investment_debate_state" in node_updates:
-                        resp = node_updates["investment_debate_state"].get("current_response", "")
-                        if resp:
-                            print(resp)
-                    if "risk_debate_state" in node_updates:
-                        ds = node_updates["risk_debate_state"]
-                        for key in ("current_aggressive_response", "current_conservative_response", "current_neutral_response", "judge_decision"):
-                            val = ds.get(key, "")
-                            if val:
-                                print(val)
-                                break
-                final_state = values
+                if stream_mode == "values":
+                    final_state = data
+                elif stream_mode == "updates":
+                    for node_name, node_updates in data.items():
+                        print(f"\n{'='*20} {node_name} {'='*20}")
+                        if "messages" in node_updates and node_updates["messages"]:
+                            node_updates["messages"][-1].pretty_print()
+                        if "investment_plan" in node_updates and node_updates["investment_plan"]:
+                            print(node_updates["investment_plan"])
+                        if "final_trade_decision" in node_updates and node_updates["final_trade_decision"]:
+                            print(node_updates["final_trade_decision"])
+                        if "investment_debate_state" in node_updates:
+                            resp = node_updates["investment_debate_state"].get("current_response", "")
+                            if resp:
+                                print(resp)
+                        if "risk_debate_state" in node_updates:
+                            ds = node_updates["risk_debate_state"]
+                            for key in ("current_aggressive_response", "current_conservative_response", "current_neutral_response", "judge_decision"):
+                                val = ds.get(key, "")
+                                if val:
+                                    print(val)
+                                    break
         else:
             # Standard mode without tracing
             final_state = self.graph.invoke(init_agent_state, **args)
