@@ -29,6 +29,7 @@ IMPORTANT DATA INSTRUCTIONS:
 - Use ONLY these exact indicator names: close_50_sma, close_200_sma, close_10_ema, macd, macds, macdh, rsi, boll, boll_ub, boll_lb, atr, vwma, mfi
 - Do NOT use macdhist, macdhish, macd_hist or any variation — only macdh exactly
 - When citing any specific number, quote it directly from the data. Never invent or estimate figures.
+- ADR CURRENCY WARNING: If the ticker is a foreign ADR (e.g. TSM, BABA, NIO, ASML), the price data is in USD (ADR price) but financial statements may be in local currency. Do NOT mix ADR price levels with local-currency financial data when computing valuation metrics. If you detect this mismatch, flag it explicitly and limit your analysis to price/technical data only — do not compute P/E, P/B, or other ratios that require both price and financial statement data.
 
 For each investor below, apply their specific timeframe and analytical lens. Keep each persona's response to ~150 words — sharp and decisive, no padding.
 
