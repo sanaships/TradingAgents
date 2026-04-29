@@ -22,17 +22,6 @@ Rather than a single analyst perspective, five legendary investor personas each 
 | 🍎 Tim Cook | Supply chain, margins, recurring revenue visibility |
 | 📊 Jim Simons | Ignore the narrative — what do the patterns say statistically? |
 
-### Pipeline improvements vs. upstream
-- **Removed the Trader node** — redundant with Research Manager; saves one LLM call per run
-- **Risk debate agents trimmed** — Aggressive/Conservative/Neutral now receive only the investment plan, not all four raw reports (significant token reduction with no quality loss)
-- **Bug fix: trade date never reached agents** — upstream code passed `time_horizon` as `trade_date`, so every agent saw `"12_months"` as today's date
-- **Date-grounding prompts** — all analysts instructed to rely only on tool-fetched data, not training knowledge (model cutoff is mid-2025)
-- **ADR currency warnings** — fundamentals analyst flags when price (USD) and financial statements (local currency) are mismatched for foreign ADRs
-- **Show-your-math** — fundamentals analyst required to show formula + source numbers for every computed ratio
-- **Verdict extraction fix** — uses last whole-word match, so "not a BUY, it's a HOLD" correctly returns HOLD
-- **Auto-retry on Anthropic 529 overload** — `max_retries=5` baked into the LLM client
-- **Full debug visibility** — all nodes (Bull/Bear/Research Manager/Risk Judge) now print output during debug runs
-
 ---
 
 ## 🏗️ Architecture
@@ -41,7 +30,7 @@ Rather than a single analyst perspective, five legendary investor personas each 
 Analyst team (sequential)
 ├── 📉 Market analyst       (RSI, MACD, SMA, Bollinger Bands, price action)
 ├── 📊 Fundamentals analyst (balance sheet, cash flow, income statement)
-└── ✦  Silicon Valley panel (5 investor personas, ~150 words each) ← custom
+└── ✦  Silicon Valley panel (5 investor personas) ← custom
 
 Research team
 ├── 🐂 Bull researcher
