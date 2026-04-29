@@ -2,112 +2,88 @@
 
 > ⚠️ For research purposes only. Not financial advice.
 
-[![Documentation](https://img.shields.io/badge/docs-live-brightgreen)](https://sanaships.github.io/TradingAgents)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-Apache_2.0-gray)](LICENSE)
 
-A fork of [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) extended with a custom **Silicon Valley Panel analyst** — 8 legendary investors who debate each other before reaching a final recommendation.
+A fork of [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) with a custom **Silicon Valley Panel analyst** and a significantly refactored pipeline. Agents debate a stock from opposing frameworks, then a Risk Judge delivers a calibrated final recommendation with position sizing.
 
 ---
 
 ## ✦ What's different in this fork
 
-The original framework includes market, news, fundamentals, and sentiment analysts feeding into a bull/bear debate and risk management team. This fork adds a custom **Silicon Valley Panel** that sits alongside those agents.
-
-Rather than a single perspective, 8 investor personas each evaluate the stock from their unique lens — then debate each other. The tension between opposing frameworks produces more nuanced output than any single analyst.
+### Custom Silicon Valley Panel
+Rather than a single analyst perspective, five legendary investor personas each evaluate the stock through a distinct lens — then debate each other. The tension between opposing frameworks surfaces blind spots that a single analyst misses.
 
 | Investor | Lens |
 |---|---|
-| 🏦 Warren Buffett | Durable moat, 20-year hold test, predictable FCF |
-| 📦 Jeff Bezos | Day 1 vs Day 2, long-term compounding, customer obsession |
+| 🏦 Warren Buffett | Durable moat, 20-year hold test, free cash flow |
+| 📦 Jeff Bezos | Day 1 vs Day 2, flywheel compounding |
 | 🚀 Elon Musk | First principles — is the physics of the business sound? |
-| 🍎 Tim Cook | Supply chain, margins, services attach rate |
-| 🔍 Sundar Pichai | AI integration, platform potential, developer ecosystem |
-| 📈 Bill Gurley | Market size, rake, margin compression risk |
-| ⚡ Jensen Huang | Is AI genuinely core, or just a buzzword? |
-| 📊 Jim Simons | Ignore the narrative — what do the patterns say? |
+| 🍎 Tim Cook | Supply chain, margins, recurring revenue visibility |
+| 📊 Jim Simons | Ignore the narrative — what do the patterns say statistically? |
 
----
-
-## 🧠 Why it produces better analysis
-
-**8 distinct mental models, not one** — each persona has a radically different framework. Buffett's moat thinking directly challenges Musk's first-principles skepticism. Simons ignores both and looks at pure patterns.
-
-**⚡ Adversarial debate** — that tension surfaces blind spots a single analyst misses.
-
-**🎯 Nuanced output** — because the personas disagree, the final result includes price targets, re-evaluation triggers, and position sizing guidance, not just a binary BUY / SELL.
+### Pipeline improvements vs. upstream
+- **Removed the Trader node** — redundant with Research Manager; saves one LLM call per run
+- **Risk debate agents trimmed** — Aggressive/Conservative/Neutral now receive only the investment plan, not all four raw reports (significant token reduction with no quality loss)
+- **Bug fix: trade date never reached agents** — upstream code passed `time_horizon` as `trade_date`, so every agent saw `"12_months"` as today's date
+- **Date-grounding prompts** — all analysts instructed to rely only on tool-fetched data, not training knowledge (model cutoff is mid-2025)
+- **ADR currency warnings** — fundamentals analyst flags when price (USD) and financial statements (local currency) are mismatched for foreign ADRs
+- **Show-your-math** — fundamentals analyst required to show formula + source numbers for every computed ratio
+- **Verdict extraction fix** — uses last whole-word match, so "not a BUY, it's a HOLD" correctly returns HOLD
+- **Auto-retry on Anthropic 529 overload** — `max_retries=5` baked into the LLM client
+- **Full debug visibility** — all nodes (Bull/Bear/Research Manager/Risk Judge) now print output during debug runs
 
 ---
 
 ## 🏗️ Architecture
+
 ```
-Analyst team
-├── 📉 Market analyst       (RSI, MACD, SMA, price action)
-├── 📰 News analyst         (headlines, macro, insider data)
-├── 📊 Fundamentals analyst (balance sheet, cash flow, P/E)
-└── ✦  Silicon Valley panel (8 investor personas) ← custom
+Analyst team (sequential)
+├── 📉 Market analyst       (RSI, MACD, SMA, Bollinger Bands, price action)
+├── 📊 Fundamentals analyst (balance sheet, cash flow, income statement)
+└── ✦  Silicon Valley panel (5 investor personas, ~150 words each) ← custom
 
 Research team
 ├── 🐂 Bull researcher
 └── 🐻 Bear researcher
-
-💼 Trader agent
-
-⚖️ Risk management
-├── 🔴 Aggressive
-├── 🟡 Neutral
-└── 🟢 Conservative
-
-→ Final decision: BUY / HOLD / SELL with rationale
+      ↓
+💼 Research Manager  (BUY / HOLD / SELL + investment plan)
+      ↓
+⚖️  Risk debate
+├── 🔴 Aggressive analyst
+├── 🟢 Conservative analyst
+└── 🟡 Neutral analyst
+      ↓
+🏛️  Risk Judge → final recommendation + position sizing
 ```
 
 ---
 
-## 📋 Example output — Vertiv Holdings (VRT)
+## 📋 Example — Vistra Corp (VST), April 16 2026
 
-> Full analysis run on March 19, 2026
+**Verdict: HOLD** ✓ — VST declined ~2.7% over the following two weeks, validating the cautious stance.
 
-**📉 Market analyst**
-VRT up 85% in 6 months, currently $264. Golden cross confirmed (50 SMA above 200 SMA). However MACD declining from peak of 19.4 to 13.3 while price made new highs — classic negative divergence. RSI at 62, ATR elevated at $13.55. Likely entering consolidation. Support at $245–250.
+**What the pipeline saw:**
+- Price $165.53, sitting 9% below 200-SMA — already in correction
+- MACD histogram improving (-3.67 → -0.31), RSI neutral at 56
+- EBITDA margin compressed ~1,200bps YoY on only 2.9% revenue growth
+- $4.2B current debt due for refinancing; capex running at $2.75B/yr
 
-**📰 News analyst**
-Expanded NVIDIA collaboration on Vera Rubin DSX AI factory infrastructure. New BYOP&C partnership with Generate Capital addresses grid-constrained markets. CEO confirmed liquid cooling capacity growing "really, really rapidly." Wall Street analysts say stock "not done" despite 50% YTD gain.
+**Silicon Valley panel:** Unanimous HOLD — AI/data center power demand thesis real but EBITDA trajectory unresolved. Simons: RSI in neutral bounce zone, no confirmation signal.
 
-**📊 Fundamentals analyst**
-Revenue $2.88B in Q4 2025, up 22.7% YoY. Net income grew 202% YoY to $445M. Gross margins expanded 520bps to 38.9%. Free cash flow $884M at 30.7% margin. Net debt declining — now 0.54x EBITDA. Forward P/E 33x implies 134% earnings growth expected. Execution risk is real at these multiples.
-
-**✦ Silicon Valley panel**
-
-| Investor | Stance | Key reason |
-|---|---|---|
-| 🏦 Buffett | SELL | 78x trailing P/E unjustifiable for cyclical business |
-| 📦 Bezos | CAUTIOUS | Momentum deceleration signals Day 2 fatigue |
-| 🚀 Musk | SELL | Priced for perfection, momentum crowded |
-| 🍎 Cook | HOLD | Margin sustainability unproven at scale |
-| 🔍 Pichai | CAUTIOUS BULL | NVIDIA partnership real, platform not yet monetised |
-| 📈 Gurley | SELL | Margin compression inevitable as Modine/Schneider scale |
-| ⚡ Huang | HOLD | Right trend, wrong price — wait for $200–220 |
-| 📊 Simons | SELL | MACD divergence + volume fadeout = reversal imminent |
-
-**Consensus:** 5 of 8 bearish or cautious. Fair value range $200–$250 vs current $265.
-
-**🐂 Bull researcher**
-NVIDIA partnership and BYOP&C alliance are structural moat-builders. Liquid cooling is a 10-year secular trend. Management executing ahead of competitors on capacity.
-
-**🐻 Bear researcher**
-Valuation prices in perfection. Modine achieving 95% of Vertiv's performance creates real margin compression risk. Q4 FCF inflated by $480M working capital release unlikely to repeat.
-
-**⚖️ Risk verdict**
-
-> **FINAL TRANSACTION PROPOSAL: HOLD**
+**Research Manager reasoning:**
+> *"The bear landed several hits I cannot dismiss. The EBITDA margin compression of nearly 1,200 basis points in a single year, against only 2.9% revenue growth, is not explained away by calling it cyclical without showing the mechanism. The $4.2 billion in current debt represents a real near-term refinancing event.*
 >
-> If you own it — hold with stop at $230, consider trimming 30–40% at current levels.
-> If you don't own it — wait for pullback to $220–238 before initiating.
-> Re-evaluate on: Q1 2026 earnings, NVIDIA Rubin deployment timeline, any Modine pricing moves.
+> *But many of these risks are visible and widely discussed — meaning they're at least partially priced into a stock already sitting 16% below its 200-day moving average."*
+>
+> **HOLD. Flip trigger: next quarterly report shows EBITDA stabilisation.**
+
+**Risk Judge:** Confirmed HOLD. Position sizing: 0% new money until EBITDA margin stabilises; existing holders maintain with stop below 200-SMA.
 
 ---
 
 ## 🚀 Quickstart
+
 ```bash
 # 1. Clone
 git clone https://github.com/sanaships/TradingAgents
@@ -122,15 +98,32 @@ pip install -r requirements.txt
 cp .env.example .env
 # Add ANTHROPIC_API_KEY to .env
 
-# 4. Run
+# 4. Configure run.py — set TICKER, TIME_HORIZON, selected analysts
+
+# 5. Run
 python3 run.py
 ```
+
+### Configuration
+
+```python
+config["deep_think_llm"]          = "claude-sonnet-4-6"        # Research Manager + Risk Judge
+config["quick_think_llm"]         = "claude-haiku-4-5-20251001" # All other agents
+config["max_debate_rounds"]       = 1   # Bull/Bear rounds
+config["max_risk_discuss_rounds"] = 1   # Risk debate rounds
+
+TIME_HORIZON = "12_months"  # 1_month | 3_months | 12_months | 3_years
+```
+
+### Note on foreign ADRs
+For foreign companies traded as US ADRs (e.g. TSM, BABA, ASML), yfinance may return financial statements in local currency while price data is in USD. The fundamentals analyst will flag this mismatch. For reliable valuation ratios, use the local ticker (e.g. `2330.TW` for TSMC) or treat computed ratios as indicative only.
 
 ---
 
 ## 📄 Citation
 
 Built on top of [TradingAgents](https://github.com/TauricResearch/TradingAgents) by Tauric Research.
+
 ```
 @misc{xiao2025tradingagentsmultiagentsllmfinancial,
   title={TradingAgents: Multi-Agents LLM Financial Trading Framework},
